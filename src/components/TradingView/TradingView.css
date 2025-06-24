@@ -1,0 +1,160 @@
+/* TradingView Component Styles */
+.tradingview-widget {
+  width: 100%;
+  background: #0a0e13;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #374151;
+}
+
+.tradingview-widget iframe {
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+  border-radius: 8px;
+}
+
+/* Override TradingView default styles to match Hyperliquid theme */
+.tradingview-widget .tv-embed-widget-wrapper {
+  background: #0a0e13 !important;
+}
+
+/* Loading state */
+.chart-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0a0e13;
+  border: 1px solid #374151;
+  border-radius: 8px;
+}
+
+.chart-loading .spinner {
+  border: 2px solid #374151;
+  border-top: 2px solid #F0B90B;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error state */
+.chart-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0a0e13;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  color: #ef4444;
+}
+
+/* Symbol selector dropdown */
+.symbol-dropdown {
+  position: relative;
+}
+
+.symbol-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  background: #2a2a2a;
+  border: 1px solid #4a5568;
+  border-radius: 6px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  z-index: 50;
+  min-width: 120px;
+}
+
+.symbol-dropdown-item {
+  width: 100%;
+  text-align: left;
+  padding: 8px 12px;
+  color: white;
+  transition: background-color 0.2s;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.symbol-dropdown-item:hover {
+  background: #3a3a3a;
+}
+
+.symbol-dropdown-item.active {
+  background: #F0B90B;
+  color: black;
+}
+
+/* Price ticker styling */
+.price-ticker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-value {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: white;
+}
+
+.price-change {
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.price-change.positive {
+  color: #00ff4c;
+  background: rgba(0, 255, 76, 0.1);
+}
+
+.price-change.negative {
+  color: #ff4757;
+  background: rgba(255, 71, 87, 0.1);
+}
+
+/* Market stats */
+.market-stats {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-size: 0.875rem;
+  color: #9ca3af;
+}
+
+.market-stat-label {
+  color: #6b7280;
+}
+
+.market-stat-value {
+  color: white;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .market-stats {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .price-ticker {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .symbol-dropdown-menu {
+    right: 0;
+    left: auto;
+  }
+}

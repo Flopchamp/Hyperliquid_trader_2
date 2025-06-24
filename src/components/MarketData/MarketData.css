@@ -1,0 +1,169 @@
+.market-data {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 10px 0;
+  border: 1px solid #2a2a3e;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.market-data-header h3 {
+  color: #fff;
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.market-data-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.price-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.symbol {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.symbol-name {
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.symbol-pair {
+  color: #888;
+  font-size: 14px;
+}
+
+.price-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.current-price {
+  color: #00ff88;
+  font-size: 32px;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+}
+
+.price-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail-item .label {
+  color: #aaa;
+  font-size: 14px;
+}
+
+.detail-item .value {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.detail-item .value.positive {
+  color: #00ff88;
+}
+
+.detail-item .value.negative {
+  color: #ff4444;
+}
+
+.status-indicator {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+.live-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #00ff88;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  background: #00ff88;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px;
+  color: #aaa;
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #333;
+  border-top: 2px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .market-data {
+    padding: 16px;
+    margin: 8px 0;
+  }
+  
+  .current-price {
+    font-size: 28px;
+  }
+  
+  .symbol-name {
+    font-size: 18px;
+  }
+}

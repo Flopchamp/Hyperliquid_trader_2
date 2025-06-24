@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"="width=device-width, initial-scale=1.0">
+    <title>Real Data Fetch Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #0a0e13;
+            color: white;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .section {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #23272E;
+            border-radius: 8px;
+        }
+        .data-display {
+            background-color: #0F1419;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .result {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success { background-color: rgba(0,255,76,0.2); border-left: 4px solid #00FF4B; }
+        .error { background-color: rgba(255,56,56,0.2); border-left: 4px solid #FF3838; }
+        .warning { background-color: rgba(240,185,11,0.2); border-left: 4px solid #FFC200; }
+        .info { background-color: rgba(59,130,246,0.2); border-left: 4px solid #3B82F6; }
+        button {
+            background-color: rgba(0,255,76,0.80);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: rgba(0,255,76,1);
+        }
+        .loading {
+            color: #F0B90B;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <h1>🚀 Real Data Fetch Test</h1>
+            <p>Testing connection and data fetching with your actual Hyperliquid keys</p>
+        </div>
+
+        <div class="section">
+            <h2>🔑 Connection Test</h2>
+            <button onclick="testConnection()">Connect with Your Keys</button>
+            <div id="connectionStatus" class="result info">Ready to connect...</div>
+            <div id="walletInfo" class="data-display" style="display:none;"></div>
+        </div>
+
+        <div class="section">
+            <h2>💰 Account Balance</h2>
+            <button onclick="fetchAccountInfo()" disabled id="accountBtn">Fetch Account Info</button>
+            <div id="accountStatus" class="result info">Connect first...</div>
+            <div id="accountData" class="data-display" style="display:none;"></div>
+        </div>
+
+        <div class="section">
+            <h2>📊 Positions</h2>
+            <button onclick="fetchPositions()" disabled id="positionsBtn">Fetch Positions</button>
+            <div id="positionsStatus" class="result info">Connect first...</div>
+            <div id="positionsData" class="data-display" style="display:none;"></div>
+        </div>
+
+        <div class="section">
+            <h2>📋 Open Orders</h2>
+            <button onclick="fetchOrders()" disabled id="ordersBtn">Fetch Open Orders</button>
+            <div id="ordersStatus" class="result info">Connect first...</div>
+            <div id="ordersData" class="data-display" style="display:none;"></div>
+        </div>
+
+        <div class="section">
+            <h2>📈 Market Data</h2>
+            <button onclick="fetchMarketData()" disabled id="marketBtn">Fetch ETH Market Data</button>
+            <div id="marketStatus" class="result info">Connect first...</div>
+            <div id="marketData" class="data-display" style="display:none;"></div>
+        </div>
+
+        <div class="section">
+            <h2>🧪 All Data Test</h2>
+            <button onclick="fetchAllData()" disabled id="allBtn">Fetch All Real Data</button>
+            <div id="allStatus" class="result info">Connect first...</div>
+        </div>
+    </div>
+
+    <script>
+        // Your actual keys
+        const PRIVATE_KEY = '0x671df21eaff14e1bc928c3f9d9fa8fcc6fb33e7b70659b59c1cf6ff6c09a9a30';
+        const PUBLIC_KEY = '0x9B7692dBb4b5524353ABE6826CE894Bcc235b7fB';
+
+        let hyperliquidService = null;
+        let isConnected = false;
+
+        async function testConnection() {
+            const status = document.getElementById('connectionStatus');
+            const walletInfo = document.getElementById('walletInfo');
+            
+            status.className = 'result warning';
+            status.innerHTML = '<span class="loading">Connecting with your keys...</span>';
+
+            try {
+                // Get the service from the main app
+                if (window.hyperliquidService) {
+                    hyperliquidService = window.hyperliquidService;
+                } else {
+                    // Try to access from parent window or create new instance
+                    throw new Error('Hyperliquid service not found. Please open the main app first.');
+                }
+
+                // Connect with your private key
+                const connected = await hyperliquidService.connect(PRIVATE_KEY);
+                
+                if (connected) {
+                    isConnected = true;
+                    const walletAddress = hyperliquidService.getWalletAddress();
+                    
+                    status.className = 'result success';
+                    status.innerHTML = '✅ Successfully connected to Hyperliquid!';
+                    
+                    walletInfo.style.display = 'block';
+                    walletInfo.textContent = `
+Connected Wallet Address: ${walletAddress}
+Provided Public Key: ${PUBLIC_KEY}
+Address Match: ${walletAddress?.toLowerCase() === PUBLIC_KEY.toLowerCase() ? '✅ Yes' : '❌ No'}
+Connection Status: ${hyperliquidService.isConnected ? 'Connected' : 'Disconnected'}
+                    `;
+
+                    // Enable other buttons
+                    document.getElementById('accountBtn').disabled = false;
+                    document.getElementById('positionsBtn').disabled = false;
+                    document.getElementById('ordersBtn').disabled = false;
+                    document.getElementById('marketBtn').disabled = false;
+                    document.getElementById('allBtn').disabled = false;
+                    
+                } else {
+                    throw new Error('Connection failed');
+                }
+                
+            } catch (error) {
+                status.className = 'result error';
+                status.innerHTML = `❌ Connection failed: ${error.message}`;
+                console.error('Connection error:', error);
+            }
+        }
+
+        async function fetchAccountInfo() {
+            const status = document.getElementById('accountStatus');
+            const data = document.getElementById('accountData');
+            
+            status.className = 'result warning';
+            status.innerHTML = '<span class="loading">Fetching account information...</span>';
+            
+            try {
+                const accountInfo = await hyperliquidService.getAccountInfo();
+                
+                status.className = 'result success';
+                status.innerHTML = '✅ Account information fetched successfully!';
+                
+                data.style.display = 'block';
+                data.textContent = `ACCOUNT INFO:
+${JSON.stringify(accountInfo, null, 2)}
+
+BALANCE SUMMARY:
+Account Value: $${parseFloat(accountInfo.marginSummary.accountValue).toFixed(2)}
+Total NTL Position: $${parseFloat(accountInfo.marginSummary.totalNtlPos).toFixed(2)}
+Total Raw USD: $${parseFloat(accountInfo.marginSummary.totalRawUsd).toFixed(2)}`;
+
+                // Verify the expected $17.50 balance
+                const balance = parseFloat(accountInfo.marginSummary.accountValue);
+                if (Math.abs(balance - 17.50) < 0.01) {
+                    status.innerHTML += '<br>🎯 Confirmed: Balance matches expected $17.50!';
+                }
+                
+            } catch (error) {
+                status.className = 'result error';
+                status.innerHTML = `❌ Failed to fetch account info: ${error.message}`;
+                console.error('Account info error:', error);
+            }
+        }
+
+        async function fetchPositions() {
+            const status = document.getElementById('positionsStatus');
+            const data = document.getElementById('positionsData');
+            
+            status.className = 'result warning';
+            status.innerHTML = '<span class="loading">Fetching positions...</span>';
+            
+            try {
+                const positions = await hyperliquidService.getPositions();
+                
+                status.className = 'result success';
+                status.innerHTML = `✅ Positions fetched successfully! (${positions.length} positions found)`;
+                
+                data.style.display = 'block';
+                if (positions.length === 0) {
+                    data.textContent = 'No open positions found.';
+                } else {
+                    data.textContent = `POSITIONS (${positions.length}):
+${JSON.stringify(positions, null, 2)}`;
+                }
+                
+            } catch (error) {
+                status.className = 'result error';
+                status.innerHTML = `❌ Failed to fetch positions: ${error.message}`;
+                console.error('Positions error:', error);
+            }
+        }
+
+        async function fetchOrders() {
+            const status = document.getElementById('ordersStatus');
+            const data = document.getElementById('ordersData');
+            
+            status.className = 'result warning';
+            status.innerHTML = '<span class="loading">Fetching open orders...</span>';
+            
+            try {
+                const orders = await hyperliquidService.getOpenOrders();
+                
+                status.className = 'result success';
+                status.innerHTML = `✅ Orders fetched successfully! (${orders.length} orders found)`;
+                
+                data.style.display = 'block';
+                if (orders.length === 0) {
+                    data.textContent = 'No open orders found.';
+                } else {
+                    data.textContent = `OPEN ORDERS (${orders.length}):
+${JSON.stringify(orders, null, 2)}`;
+                }
+                
+            } catch (error) {
+                status.className = 'result error';
+                status.innerHTML = `❌ Failed to fetch orders: ${error.message}`;
+                console.error('Orders error:', error);
+            }
+        }
+
+        async function fetchMarketData() {
+            const status = document.getElementById('marketStatus');
+            const data = document.getElementById('marketData');
+            
+            status.className = 'result warning';
+            status.innerHTML = '<span class="loading">Fetching ETH market data...</span>';
+            
+            try {
+                const marketInfo = await hyperliquidService.getMarketData('ETH');
+                
+                status.className = 'result success';
+                status.innerHTML = '✅ Market data fetched successfully!';
+                
+                data.style.display = 'block';
+                data.textContent = `ETH MARKET DATA:
+${JSON.stringify(marketInfo, null, 2)}`;
+                
+            } catch (error) {
+                status.className = 'result error';
+                status.innerHTML = `❌ Failed to fetch market data: ${error.message}`;
+                console.error('Market data error:', error);
+            }
+        }
+
+        async function fetchAllData() {
+            const status = document.getElementById('allStatus');
+            
+            status.className = 'result warning';
+            status.innerHTML = '<span class="loading">Fetching all account data...</span>';
+            
+            try {
+                // Fetch all data simultaneously
+                const [accountInfo, positions, orders, marketData] = await Promise.all([
+                    hyperliquidService.getAccountInfo(),
+                    hyperliquidService.getPositions(),
+                    hyperliquidService.getOpenOrders(),
+                    hyperliquidService.getMarketData('ETH')
+                ]);
+                
+                status.className = 'result success';
+                status.innerHTML = `✅ All data fetched successfully!
+<br>📊 Account Value: $${parseFloat(accountInfo.marginSummary.accountValue).toFixed(2)}
+<br>📈 Positions: ${positions.length}
+<br>📋 Open Orders: ${orders.length}
+<br>💱 ETH Price: $${marketData.price ? marketData.price.toFixed(2) : 'N/A'}`;
+
+                // Auto-populate other sections
+                document.getElementById('accountData').style.display = 'block';
+                document.getElementById('accountData').textContent = JSON.stringify(accountInfo, null, 2);
+                document.getElementById('accountStatus').className = 'result success';
+                document.getElementById('accountStatus').innerHTML = '✅ Account data auto-populated';
+
+                document.getElementById('positionsData').style.display = 'block';
+                document.getElementById('positionsData').textContent = positions.length > 0 ? JSON.stringify(positions, null, 2) : 'No positions';
+                document.getElementById('positionsStatus').className = 'result success';
+                document.getElementById('positionsStatus').innerHTML = `✅ ${positions.length} positions found`;
+
+                document.getElementById('ordersData').style.display = 'block';
+                document.getElementById('ordersData').textContent = orders.length > 0 ? JSON.stringify(orders, null, 2) : 'No open orders';
+                document.getElementById('ordersStatus').className = 'result success';
+                document.getElementById('ordersStatus').innerHTML = `✅ ${orders.length} orders found`;
+
+                document.getElementById('marketData').style.display = 'block';
+                document.getElementById('marketData').textContent = JSON.stringify(marketData, null, 2);
+                document.getElementById('marketStatus').className = 'result success';
+                document.getElementById('marketStatus').innerHTML = '✅ Market data populated';
+                
+            } catch (error) {
+                status.className = 'result error';
+                status.innerHTML = `❌ Failed to fetch all data: ${error.message}`;
+                console.error('All data error:', error);
+            }
+        }
+
+        // Try to get service reference on load
+        window.addEventListener('load', () => {
+            // Check if service is available from main app
+            if (window.opener && window.opener.hyperliquidService) {
+                window.hyperliquidService = window.opener.hyperliquidService;
+                document.getElementById('connectionStatus').innerHTML = '🔗 Service reference obtained from main app. Ready to connect!';
+            } else if (window.parent && window.parent.hyperliquidService) {
+                window.hyperliquidService = window.parent.hyperliquidService;
+                document.getElementById('connectionStatus').innerHTML = '🔗 Service reference obtained from parent. Ready to connect!';
+            } else {
+                document.getElementById('connectionStatus').className = 'result warning';
+                document.getElementById('connectionStatus').innerHTML = '⚠️ Service not found. Please open the main app first, then refresh this page.';
+            }
+        });
+    </script>
+</body>
+</html>

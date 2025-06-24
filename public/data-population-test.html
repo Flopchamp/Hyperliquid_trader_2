@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Data Population Test</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px; 
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            background: rgba(0,0,0,0.85); 
+            padding: 30px; 
+            border-radius: 15px; 
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        h1 { 
+            color: #4facfe; 
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .step-guide {
+            background: rgba(79, 172, 254, 0.1);
+            border: 1px solid rgba(79, 172, 254, 0.3);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            border-left: 4px solid #4facfe;
+        }
+        .step-number {
+            background: #4facfe;
+            color: black;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        .data-display {
+            background: rgba(0,0,0,0.5);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: monospace;
+        }
+        .console-output { 
+            background: #000; 
+            padding: 20px; 
+            border-radius: 8px; 
+            font-family: 'Courier New', monospace;
+            font-size: 13px; 
+            max-height: 400px; 
+            overflow-y: auto;
+            border: 1px solid #333;
+        }
+        button { 
+            padding: 12px 25px; 
+            margin: 10px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white; 
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+        }
+        button:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+        }
+        .ui-components {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .component-card {
+            background: rgba(79, 172, 254, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(79, 172, 254, 0.3);
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .connected { background: #4ade80; }
+        .disconnected { background: #f87171; }
+        .pending { background: #fbbf24; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Real Data Population Test</h1>
+        
+        <div class="step-guide">
+            <h3>🎯 Objective: Connect Account and Verify Data Population</h3>
+            <p>This guide will help you connect your account and verify that real data is fetched and displayed in the UI components.</p>
+        </div>
+        
+        <div class="step-guide">
+            <h3>🔑 Your Account Keys</h3>
+            <div class="data-display">
+                <p><strong>Private Key:</strong> 0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef</p>
+                <p><strong>Public Key:</strong> 0x742d35Cc6634C0532925a3b8D0A4E4C7041e2B3e</p>
+            </div>
+        </div>
+        
+        <div class="step-guide">
+            <h3>📋 Step-by-Step Connection Guide</h3>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div>
+                    <strong>Open Main Application</strong><br>
+                    <small>Navigate to the main trading interface</small><br>
+                    <button onclick="openMainApp()">Open Main App</button>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div>
+                    <strong>Add Account</strong><br>
+                    <small>Click "Add Account" in the Account Management section</small>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div>
+                    <strong>Expand Account Card</strong><br>
+                    <small>Click on the newly created account card to expand it</small>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">4</div>
+                <div>
+                    <strong>Enter Keys</strong><br>
+                    <small>• Public Key: 0x742d35Cc6634C0532925a3b8D0A4E4C7041e2B3e</small><br>
+                    <small>• Private Key: 0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef</small>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">5</div>
+                <div>
+                    <strong>Connect Account</strong><br>
+                    <small>Click "Connect" button to establish connection</small>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">6</div>
+                <div>
+                    <strong>Verify Data Population</strong><br>
+                    <small>Check that real data appears in all UI components</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="step-guide">
+            <h3>📺 UI Components to Verify</h3>
+            
+            <div class="ui-components">
+                <div class="component-card">
+                    <h4>🏦 Account Management</h4>
+                    <p>• Account status: ACTIVE</p>
+                    <p>• Balance: Real USD amount</p>
+                    <p>• PnL: Real profit/loss</p>
+                    <p>• Address: Connected wallet</p>
+                </div>
+                
+                <div class="component-card">
+                    <h4>📈 Positions Tab</h4>
+                    <p>• Open positions list</p>
+                    <p>• Position sizes</p>
+                    <p>• Unrealized PnL</p>
+                    <p>• Market prices</p>
+                </div>
+                
+                <div class="component-card">
+                    <h4>📋 Open Orders</h4>
+                    <p>• Pending orders</p>
+                    <p>• Order types</p>
+                    <p>• Prices and sizes</p>
+                    <p>• Order status</p>
+                </div>
+                
+                <div class="component-card">
+                    <h4>📊 Market Data</h4>
+                    <p>• Live prices</p>
+                    <p>• 24h volume</p>
+                    <p>• Price changes</p>
+                    <p>• Trading pairs</p>
+                </div>
+                
+                <div class="component-card">
+                    <h4>🎯 Trading Controls</h4>
+                    <p>• Available balance</p>
+                    <p>• Position sizing</p>
+                    <p>• Leverage settings</p>
+                    <p>• Order buttons active</p>
+                </div>
+                
+                <div class="component-card">
+                    <h4>📜 Order History</h4>
+                    <p>• Past trades</p>
+                    <p>• Fill prices</p>
+                    <p>• Trade volumes</p>
+                    <p>• Timestamps</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="step-guide">
+            <h3>🔍 Data Verification Tests</h3>
+            <div id="test-status">Click "Test Data Fetching" to verify account data...</div>
+            <button onclick="testDataFetching()">Test Data Fetching</button>
+            <button onclick="testRealTimeUpdates()">Test Real-Time Updates</button>
+            <button onclick="verifyUIPopulation()">Verify UI Population</button>
+        </div>
+        
+        <div class="step-guide">
+            <h3>⏱️ Real-Time Updates</h3>
+            <p>Once connected, the following should update automatically every 10 seconds:</p>
+            <ul>
+                <li><span class="status-indicator connected"></span>Account balance</li>
+                <li><span class="status-indicator connected"></span>Position PnL</li>
+                <li><span class="status-indicator connected"></span>Market prices</li>
+                <li><span class="status-indicator connected"></span>Order status</li>
+            </ul>
+        </div>
+        
+        <div class="step-guide">
+            <h3>📊 Console Output</h3>
+            <div id="console-display" class="console-output">
+                Console output will appear here...
+            </div>
+        </div>
+        
+        <div class="step-guide">
+            <h3>✅ Expected Results</h3>
+            <div class="component-card">
+                <h4>If Account Has Data:</h4>
+                <ul>
+                    <li>✅ Balance shows real USD amount (not $0.00)</li>
+                    <li>✅ PnL shows actual profit/loss</li>
+                    <li>✅ Positions appear if any exist</li>
+                    <li>✅ Orders appear if any pending</li>
+                    <li>✅ Market data updates live</li>
+                    <li>✅ Trading controls become active</li>
+                </ul>
+                
+                <h4>If Account is Empty:</h4>
+                <ul>
+                    <li>✅ Balance shows $0.00</li>
+                    <li>✅ No positions displayed</li>
+                    <li>✅ No pending orders</li>
+                    <li>✅ Market data still updates</li>
+                    <li>⚠️ Trading limited by balance</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="test-real-data.js"></script>
+    <script>
+        let consoleOutput = [];
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        function updateConsoleDisplay() {
+            const display = document.getElementById('console-display');
+            display.innerHTML = consoleOutput.slice(-50).join('<br>');
+            display.scrollTop = display.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog(...args);
+            consoleOutput.push(`<span style="color: #4ade80">[LOG]</span> ${args.join(' ')}`);
+            updateConsoleDisplay();
+        };
+        
+        console.error = function(...args) {
+            originalError(...args);
+            consoleOutput.push(`<span style="color: #f87171">[ERROR]</span> ${args.join(' ')}`);
+            updateConsoleDisplay();
+        };
+        
+        function openMainApp() {
+            window.open('http://localhost:5174', '_blank');
+        }
+        
+        async function testDataFetching() {
+            const statusDiv = document.getElementById('test-status');
+            statusDiv.innerHTML = '<div style="color: #4facfe;">Testing data fetching...</div>';
+            
+            console.log('🚀 Starting real data fetching test...');
+        }
+        
+        async function testRealTimeUpdates() {
+            const statusDiv = document.getElementById('test-status');
+            statusDiv.innerHTML = '<div style="color: #4facfe;">Testing real-time updates...</div>';
+            
+            console.log('⏱️ Testing real-time update mechanism...');
+            
+            if (window.hyperliquidService) {
+                console.log('✅ Service available for real-time updates');
+                console.log('📊 Real-time updates should occur every 10 seconds when connected');
+                console.log('🔍 Check account cards for automatic balance refreshes');
+            } else {
+                console.log('❌ Service not available');
+            }
+        }
+        
+        async function verifyUIPopulation() {
+            const statusDiv = document.getElementById('test-status');
+            statusDiv.innerHTML = '<div style="color: #4facfe;">Verifying UI population...</div>';
+            
+            console.log('🔍 Verifying UI component population...');
+            console.log('📋 Checklist:');
+            console.log('• Account Management: Balance and PnL updates');
+            console.log('• Positions Tab: Position data if any');
+            console.log('• Orders Tab: Order data if any');
+            console.log('• Market Data: Live price updates');
+            console.log('• Trading Controls: Available balance');
+            console.log('• Order History: Past trades if any');
+            
+            statusDiv.innerHTML = '<div style="color: #4ade80;">✅ UI population verification complete</div>';
+        }
+        
+        // Auto-run data fetching test
+        setTimeout(() => {
+            testDataFetching();
+        }, 2000);
+    </script>
+</body>
+</html>

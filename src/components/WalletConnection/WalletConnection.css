@@ -1,0 +1,181 @@
+.wallet-connection {
+  background: #2a2a2a;
+  border: 1px solid #4a4a4a;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.wallet-connection.connected {
+  border-color: #28a745;
+  background: linear-gradient(135deg, #2a2a2a 0%, #1e3a2e 100%);
+}
+
+.wallet-connection.disconnected {
+  border-color: #dc3545;
+  background: linear-gradient(135deg, #2a2a2a 0%, #3a1e1e 100%);
+}
+
+.wallet-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.status-indicator {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.status-indicator.connected {
+  color: #28a745;
+}
+
+.status-indicator.disconnected {
+  color: #dc3545;
+}
+
+.status-text {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.wallet-address {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: #61dafb;
+  background: #1a1a1a;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  border: 1px solid #4a4a4a;
+}
+
+.connection-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.input-group {
+  display: flex;
+  gap: 8px;
+}
+
+.input-group input {
+  flex: 1;
+  padding: 10px 12px;
+  background: #1a1a1a;
+  border: 1px solid #4a4a4a;
+  border-radius: 4px;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #61dafb;
+}
+
+.input-group input::placeholder {
+  color: #888888;
+}
+
+.generate-btn {
+  background: #6c757d;
+  color: #ffffff;
+  border: none;
+  padding: 10px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  min-width: 40px;
+}
+
+.generate-btn:hover:not(:disabled) {
+  background: #5a6268;
+  transform: translateY(-1px);
+}
+
+.generate-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.connect-btn {
+  background: #61dafb;
+  color: #000000;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.connect-btn:hover:not(:disabled) {
+  background: #21a9c7;
+  transform: translateY(-1px);
+}
+
+.connect-btn:disabled {
+  background: #666666;
+  color: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.disconnect-btn {
+  background: #dc3545;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.disconnect-btn:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+}
+
+.error-message {
+  background: #721c24;
+  color: #f8d7da;
+  border: 1px solid #a94442;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.warning {
+  font-size: 11px;
+  color: #ffc107;
+  text-align: center;
+  margin-top: 8px;
+  padding: 4px 8px;
+  background: rgba(255, 193, 7, 0.1);
+  border-radius: 4px;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .connection-form {
+    gap: 8px;
+  }
+  
+  .input-group {
+    flex-direction: column;
+  }
+  
+  .generate-btn {
+    align-self: stretch;
+  }
+}

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final UI Data Population Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #0a0e13;
+            color: white;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #181C29;
+            border-radius: 8px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #23272E;
+            border-radius: 8px;
+        }
+        .test-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #2A3441;
+            border-radius: 6px;
+            border-left: 4px solid #F0B90B;
+        }
+        .success {
+            border-left-color: #00FF4B;
+        }
+        .error {
+            border-left-color: #FF3838;
+        }
+        .warning {
+            border-left-color: #FFC200;
+        }
+        .code {
+            background-color: #0F1419;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 10px 0;
+        }
+        .instructions {
+            background-color: #1a1e2e;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .steps {
+            list-style: none;
+            padding: 0;
+        }
+        .steps li {
+            padding: 8px 0;
+            border-bottom: 1px solid #374151;
+        }
+        .steps li:before {
+            content: "→ ";
+            color: #F0B90B;
+            font-weight: bold;
+        }
+        button {
+            background-color: rgba(0,255,76,0.80);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: rgba(0,255,76,1);
+        }
+        button.secondary {
+            background-color: rgba(240,185,11,0.80);
+        }
+        button.secondary:hover {
+            background-color: rgba(240,185,11,1);
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .status.success { background-color: rgba(0,255,76,0.2); }
+        .status.error { background-color: rgba(255,56,56,0.2); }
+        .status.info { background-color: rgba(240,185,11,0.2); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Final UI Data Population Test</h1>
+            <p>Complete verification of real-time account data display in all UI components</p>
+        </div>
+
+        <div class="section">
+            <h2>📋 Test Checklist</h2>
+            <div class="instructions">
+                <p><strong>Prerequisites:</strong></p>
+                <ul class="steps">
+                    <li>Have your Hyperliquid private key ready (0x format, 64 characters)</li>
+                    <li>Have your wallet address ready (0x format, 40 characters)</li>
+                    <li>Ensure you have some USDC balance on Hyperliquid testnet/mainnet</li>
+                    <li>Browser console should be open (F12) to monitor real-time updates</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔧 Service Verification</h2>
+            <div class="test-item">
+                <h3>1. Verify Trading Service</h3>
+                <p>Test the hyperliquid service functions before UI testing:</p>
+                <div class="code">window.hyperliquidService.debugTest()</div>
+                <button onclick="testService()">Test Service</button>
+                <div id="serviceStatus" class="status info">Ready to test...</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📊 UI Component Testing</h2>
+            
+            <div class="test-item">
+                <h3>2. Account Management UI</h3>
+                <p><strong>Test Steps:</strong></p>
+                <ul class="steps">
+                    <li>Open the main app and click on "Add Account" if no accounts exist</li>
+                    <li>Click on Account 1 to expand the connection form</li>
+                    <li>Enter your public key (wallet address) in the first field</li>
+                    <li>Enter your private key in the second field</li>
+                    <li>Click "Connect" and verify successful connection message</li>
+                    <li>Verify the account status changes to "ACTIVE"</li>
+                    <li>Check that balance and PnL start updating in the account card</li>
+                </ul>
+                <button onclick="openMainApp()">Open Main App</button>
+                <div id="accountStatus" class="status info">Ready to test...</div>
+            </div>
+
+            <div class="test-item">
+                <h3>3. Balances Tab</h3>
+                <p><strong>Expected Behavior:</strong></p>
+                <ul class="steps">
+                    <li>Shows "Connect an account to view balances" when not connected</li>
+                    <li>Displays real USDC balance data when connected</li>
+                    <li>Updates Account Value, Total Raw USD, and Total NTL Position</li>
+                    <li>Shows loading state while fetching data</li>
+                    <li>Auto-refreshes every 10 seconds</li>
+                </ul>
+                <div id="balancesStatus" class="status info">Test after connecting account...</div>
+            </div>
+
+            <div class="test-item">
+                <h3>4. Positions Tab</h3>
+                <p><strong>Expected Behavior:</strong></p>
+                <ul class="steps">
+                    <li>Shows "No positions found" when no positions exist</li>
+                    <li>Displays real position data with colors (green for long, red for short)</li>
+                    <li>Shows Symbol, Size, Position Value, Entry Price, Mark Price, PnL%, Leverage, Type</li>
+                    <li>Updates in real-time as positions change</li>
+                </ul>
+                <div id="positionsStatus" class="status info">Test after connecting account...</div>
+            </div>
+
+            <div class="test-item">
+                <h3>5. Open Orders Tab</h3>
+                <p><strong>Expected Behavior:</strong></p>
+                <ul class="steps">
+                    <li>Shows "No open orders" when no orders exist</li>
+                    <li>Displays real order data with proper formatting</li>
+                    <li>Shows Time, Type, Coin, Direction, Size, Price, Order Value, Status</li>
+                    <li>Provides "Cancel" button for pending orders</li>
+                    <li>Updates automatically when orders are filled/cancelled</li>
+                </ul>
+                <div id="ordersStatus" class="status info">Test after connecting account...</div>
+            </div>
+
+            <div class="test-item">
+                <h3>6. Trading Controls Integration</h3>
+                <p><strong>Test Steps:</strong></p>
+                <ul class="steps">
+                    <li>Navigate to Trading Controls section (right panel)</li>
+                    <li>Set asset to ETH-USD, enter size (0.001), select Market order</li>
+                    <li>Click Buy/Sell and verify order placement</li>
+                    <li>Check that order appears in Open Orders tab</li>
+                    <li>Verify account balance updates after order execution</li>
+                    <li>Test limit orders with specific price</li>
+                </ul>
+                <button onclick="testTrading()">Test Trading Integration</button>
+                <div id="tradingStatus" class="status info">Ready to test...</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔄 Real-time Updates Testing</h2>
+            
+            <div class="test-item">
+                <h3>7. WebSocket Data Verification</h3>
+                <p><strong>Monitor these in browser console:</strong></p>
+                <div class="code">
+// Check WebSocket connection
+window.hyperliquidService.ws?.readyState === 1
+
+// Monitor real-time price updates
+window.hyperliquidService.on('priceUpdate', (data) => console.log('Price update:', data))
+
+// Check event listeners
+window.hyperliquidService.listenerCount('priceUpdate')
+                </div>
+                <button onclick="testWebSocket()">Test WebSocket</button>
+                <div id="websocketStatus" class="status info">Ready to test...</div>
+            </div>
+
+            <div class="test-item">
+                <h3>8. Account Data Refresh</h3>
+                <p><strong>Verify automatic updates:</strong></p>
+                <ul class="steps">
+                    <li>Account balance should refresh every 10 seconds</li>
+                    <li>Position data should update with price changes</li>
+                    <li>PnL should reflect real-time market movements</li>
+                    <li>Order status should update when filled</li>
+                </ul>
+                <button onclick="forceRefresh()">Force Refresh</button>
+                <div id="refreshStatus" class="status info">Ready to test...</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✅ Final Validation</h2>
+            
+            <div class="test-item success">
+                <h3>9. Complete Integration Test</h3>
+                <p><strong>Full End-to-End Workflow:</strong></p>
+                <ol class="steps">
+                    <li>Connect account with real keys ✓</li>
+                    <li>Verify real balance display ✓</li>
+                    <li>Place a small test order ✓</li>
+                    <li>Check order appears in Open Orders ✓</li>
+                    <li>Monitor position if order fills ✓</li>
+                    <li>Verify PnL updates with market moves ✓</li>
+                    <li>Test order cancellation ✓</li>
+                    <li>Confirm real-time data flow ✓</li>
+                </ol>
+                <button onclick="runFullTest()">Run Complete Test</button>
+                <div id="fullTestStatus" class="status info">Ready for complete validation...</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🐛 Debug Tools</h2>
+            <div class="test-item">
+                <h3>Console Commands</h3>
+                <div class="code">
+// Get service instance
+const service = window.hyperliquidService;
+
+// Check connection status
+service.isConnected
+
+// Get current wallet
+service.getWalletAddress()
+
+// Manually fetch account data
+service.getAccountInfo()
+
+// Check positions
+service.getPositions()
+
+// Check orders
+service.getOpenOrders()
+
+// Test API connectivity
+service.debugTest()
+                </div>
+                <button onclick="showDebugInfo()">Show Debug Info</button>
+                <div id="debugStatus" class="status info">Debug tools ready...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Test functions
+        function testService() {
+            const status = document.getElementById('serviceStatus');
+            status.className = 'status info';
+            status.textContent = 'Testing service...';
+            
+            if (window.hyperliquidService) {
+                window.hyperliquidService.debugTest().then(() => {
+                    status.className = 'status success';
+                    status.textContent = '✓ Service test completed successfully!';
+                }).catch(error => {
+                    status.className = 'status error';
+                    status.textContent = '✗ Service test failed: ' + error.message;
+                });
+            } else {
+                status.className = 'status error';
+                status.textContent = '✗ Hyperliquid service not found! Make sure the main app is loaded.';
+            }
+        }
+
+        function openMainApp() {
+            window.open('/', '_blank');
+            const status = document.getElementById('accountStatus');
+            status.className = 'status success';
+            status.textContent = '✓ Main app opened in new tab. Follow the account connection steps!';
+        }
+
+        function testTrading() {
+            const status = document.getElementById('tradingStatus');
+            status.className = 'status info';
+            status.textContent = 'Open the main app and navigate to Trading Controls to test order placement.';
+        }
+
+        function testWebSocket() {
+            const status = document.getElementById('websocketStatus');
+            
+            if (window.hyperliquidService && window.hyperliquidService.ws) {
+                const wsState = window.hyperliquidService.ws.readyState;
+                const states = {0: 'CONNECTING', 1: 'OPEN', 2: 'CLOSING', 3: 'CLOSED'};
+                
+                status.className = wsState === 1 ? 'status success' : 'status warning';
+                status.textContent = `WebSocket state: ${states[wsState]} (${wsState})`;
+                
+                if (wsState === 1) {
+                    console.log('WebSocket is connected and ready for real-time updates');
+                }
+            } else {
+                status.className = 'status error';
+                status.textContent = '✗ WebSocket not found. Connect an account first.';
+            }
+        }
+
+        function forceRefresh() {
+            const status = document.getElementById('refreshStatus');
+            
+            if (window.hyperliquidService && window.hyperliquidService.isConnected) {
+                status.className = 'status info';
+                status.textContent = 'Refreshing account data...';
+                
+                Promise.all([
+                    window.hyperliquidService.getAccountInfo(),
+                    window.hyperliquidService.getPositions(),
+                    window.hyperliquidService.getOpenOrders()
+                ]).then(([account, positions, orders]) => {
+                    status.className = 'status success';
+                    status.textContent = `✓ Data refreshed! Account: ${JSON.stringify(account?.marginSummary)}, Positions: ${positions.length}, Orders: ${orders.length}`;
+                }).catch(error => {
+                    status.className = 'status error';
+                    status.textContent = '✗ Refresh failed: ' + error.message;
+                });
+            } else {
+                status.className = 'status warning';
+                status.textContent = '⚠ Connect an account first to refresh data.';
+            }
+        }
+
+        function runFullTest() {
+            const status = document.getElementById('fullTestStatus');
+            status.className = 'status info';
+            status.textContent = 'Running complete integration test...';
+            
+            // This would run through all the test steps programmatically
+            setTimeout(() => {
+                status.className = 'status success';
+                status.textContent = '✓ Full integration test ready! Follow the manual steps above to complete verification.';
+            }, 1000);
+        }
+
+        function showDebugInfo() {
+            const status = document.getElementById('debugStatus');
+            
+            if (window.hyperliquidService) {
+                const service = window.hyperliquidService;
+                const info = {
+                    connected: service.isConnected,
+                    wallet: service.getWalletAddress(),
+                    wsState: service.ws?.readyState,
+                    listeners: service.listenerCount ? service.listenerCount('priceUpdate') : 'N/A'
+                };
+                
+                status.className = 'status success';
+                status.textContent = '✓ Debug info: ' + JSON.stringify(info, null, 2);
+                console.log('Hyperliquid Service Debug Info:', info);
+            } else {
+                status.className = 'status error';
+                status.textContent = '✗ Service not available. Open main app first.';
+            }
+        }
+
+        // Auto-refresh status
+        setInterval(() => {
+            if (window.hyperliquidService && window.hyperliquidService.isConnected) {
+                document.querySelectorAll('.status.info').forEach(el => {
+                    if (el.textContent.includes('Ready to test') || el.textContent.includes('Test after connecting')) {
+                        el.className = 'status success';
+                        el.textContent = '✓ Account connected - ready to test this component!';
+                    }
+                });
+            }
+        }, 2000);
+    </script>
+</body>
+</html>

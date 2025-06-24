@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Key Correspondence Test</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px; 
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+        }
+        .container { 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            background: rgba(0,0,0,0.9); 
+            padding: 30px; 
+            border-radius: 15px; 
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+        h1 { 
+            color: #ff6b6b; 
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .warning-box {
+            background: rgba(255, 107, 107, 0.2);
+            border: 2px solid #ff6b6b;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .security-alert {
+            background: rgba(255, 0, 0, 0.1);
+            border-left: 5px solid #ff0000;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .test-keys {
+            background: rgba(0,0,0,0.5);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        .console-output { 
+            background: #000; 
+            padding: 20px; 
+            border-radius: 8px; 
+            font-family: 'Courier New', monospace;
+            font-size: 13px; 
+            max-height: 400px; 
+            overflow-y: auto;
+            border: 1px solid #333;
+        }
+        button { 
+            padding: 12px 25px; 
+            margin: 10px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white; 
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+        button:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+        .status { 
+            display: flex; 
+            align-items: center; 
+            margin: 12px 0; 
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+        }
+        .status.success { 
+            color: #4ade80; 
+            background: rgba(74, 222, 128, 0.1);
+        }
+        .status.error { 
+            color: #f87171; 
+            background: rgba(248, 113, 113, 0.1);
+        }
+        .status.warning { 
+            color: #fbbf24; 
+            background: rgba(251, 191, 36, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Key Correspondence Test</h1>
+        
+        <div class="warning-box">
+            <h2>⚠️ SECURITY WARNING ⚠️</h2>
+            <p><strong>NEVER share real private keys publicly!</strong></p>
+            <p>Private keys should be kept secret and secure at all times.</p>
+        </div>
+        
+        <div class="security-alert">
+            <h3>🔒 About the Provided Keys</h3>
+            <p>The keys you provided appear to follow a test pattern. Let's verify:</p>
+            
+            <div class="test-keys">
+                <p><strong>Private Key:</strong></p>
+                <p>0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef</p>
+                
+                <p><strong>Public Key:</strong></p>
+                <p>0x742d35Cc6634C0532925a3b8D0A4E4C7041e2B3e</p>
+            </div>
+            
+            <p><strong>Pattern Analysis:</strong></p>
+            <ul>
+                <li>Private key follows incremental pattern: 0123456789abcdef (repeated)</li>
+                <li>This suggests it's a test/example key, not a real wallet</li>
+                <li>Real private keys should be cryptographically random</li>
+            </ul>
+        </div>
+        
+        <div class="status warning">
+            <div>
+                <h3>🧪 Key Correspondence Test</h3>
+                <p>Testing if the private key actually derives the provided public key...</p>
+                <div id="test-status">Click "Test Key Correspondence" to verify...</div>
+                <button onclick="runKeyTest()">Test Key Correspondence</button>
+                <button onclick="testAccountConnection()">Test Account Connection</button>
+            </div>
+        </div>
+        
+        <div class="status">
+            <div>
+                <h3>📋 What This Test Does:</h3>
+                <ol>
+                    <li>Connects to Hyperliquid using the private key</li>
+                    <li>Derives the actual wallet address from the private key</li>
+                    <li>Compares it with the provided public key</li>
+                    <li>Checks if account has any balance</li>
+                    <li>Reports if keys correspond correctly</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="status">
+            <div>
+                <h3>🎯 Expected Results:</h3>
+                <p><strong>If keys correspond:</strong></p>
+                <ul>
+                    <li>✅ Connection successful</li>
+                    <li>✅ Derived address matches provided public key</li>
+                    <li>✅ Account info can be retrieved</li>
+                    <li>✅ Ready for trading (if funded)</li>
+                </ul>
+                
+                <p><strong>If keys don't correspond:</strong></p>
+                <ul>
+                    <li>❌ Address mismatch detected</li>
+                    <li>❌ Connection will be rejected</li>
+                    <li>🔧 Need correct key pair</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="status">
+            <h3>📊 Test Console Output</h3>
+            <div id="console-display" class="console-output">
+                Console output will appear here...
+            </div>
+        </div>
+        
+        <div class="security-alert">
+            <h3>🛡️ Security Best Practices</h3>
+            <ul>
+                <li><strong>Real Keys:</strong> Never share private keys in plain text</li>
+                <li><strong>Test Keys:</strong> Safe to use for development (no real funds)</li>
+                <li><strong>Storage:</strong> Store private keys securely (hardware wallets, encrypted storage)</li>
+                <li><strong>Verification:</strong> Always verify key correspondence before use</li>
+                <li><strong>Network:</strong> Ensure you're on the correct network (mainnet/testnet)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="test-key-correspondence.js"></script>
+    <script>
+        let consoleOutput = [];
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        function updateConsoleDisplay() {
+            const display = document.getElementById('console-display');
+            display.innerHTML = consoleOutput.slice(-50).join('<br>');
+            display.scrollTop = display.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog(...args);
+            consoleOutput.push(`<span style="color: #4ade80">[LOG]</span> ${args.join(' ')}`);
+            updateConsoleDisplay();
+        };
+        
+        console.error = function(...args) {
+            originalError(...args);
+            consoleOutput.push(`<span style="color: #f87171">[ERROR]</span> ${args.join(' ')}`);
+            updateConsoleDisplay();
+        };
+        
+        async function runKeyTest() {
+            const statusDiv = document.getElementById('test-status');
+            statusDiv.innerHTML = '<div style="color: #fbbf24;">Testing key correspondence...</div>';
+            
+            console.log('🚀 Starting key correspondence test...');
+        }
+        
+        async function testAccountConnection() {
+            const statusDiv = document.getElementById('test-status');
+            statusDiv.innerHTML = '<div style="color: #fbbf24;">Testing account connection...</div>';
+            
+            if (window.hyperliquidService) {
+                try {
+                    console.log('🔍 Testing direct account connection...');
+                    
+                    const privateKey = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+                    const connected = await window.hyperliquidService.connect(privateKey);
+                    
+                    if (connected) {
+                        const address = window.hyperliquidService.getWalletAddress();
+                        statusDiv.innerHTML = `<div style="color: #4ade80;">✅ Connected! Address: ${address}</div>`;
+                        
+                        // Try to get account info
+                        try {
+                            const accountInfo = await window.hyperliquidService.getAccountInfo();
+                            console.log('📊 Account info retrieved:', accountInfo);
+                        } catch (error) {
+                            console.log('❌ Account info error:', error.message);
+                        }
+                        
+                        window.hyperliquidService.disconnect();
+                    } else {
+                        statusDiv.innerHTML = '<div style="color: #f87171;">❌ Connection failed</div>';
+                    }
+                    
+                } catch (error) {
+                    statusDiv.innerHTML = `<div style="color: #f87171;">❌ Error: ${error.message}</div>`;
+                    console.error('Connection error:', error);
+                }
+            } else {
+                statusDiv.innerHTML = '<div style="color: #f87171;">❌ Service not available</div>';
+            }
+        }
+        
+        // Auto-run test
+        setTimeout(() => {
+            runKeyTest();
+        }, 2000);
+    </script>
+</body>
+</html>

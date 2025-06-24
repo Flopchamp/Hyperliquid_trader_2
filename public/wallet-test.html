@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyperliquid Wallet Connection Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+        .container {
+            background: #2a2a2a;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #61dafb;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #3a3a3a;
+            border-radius: 8px;
+            border-left: 4px solid #61dafb;
+        }
+        .section h3 {
+            margin-top: 0;
+            color: #61dafb;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #cccccc;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #4a4a4a;
+            border-radius: 6px;
+            background: #1a1a1a;
+            color: #ffffff;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        input:focus {
+            outline: none;
+            border-color: #61dafb;
+        }
+        button {
+            background: #61dafb;
+            color: #000000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background: #21a9c7;
+            transform: translateY(-2px);
+        }
+        button:disabled {
+            background: #666666;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .status.connected {
+            background: #0f5132;
+            color: #d1e7dd;
+            border: 1px solid #0a3622;
+        }
+        .status.disconnected {
+            background: #58151c;
+            color: #f8d7da;
+            border: 1px solid #2c0b0e;
+        }
+        .status.connecting {
+            background: #664d03;
+            color: #fff3cd;
+            border: 1px solid #332701;
+        }
+        pre {
+            background: #1a1a1a;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            border: 1px solid #4a4a4a;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        .warning {
+            background: #664d03;
+            color: #fff3cd;
+            border: 1px solid #332701;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .info {
+            background: #055160;
+            color: #cff4fc;
+            border: 1px solid #0c4a6e;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .metric {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #4a4a4a;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #61dafb;
+            margin-bottom: 5px;
+        }
+        .metric-label {
+            color: #cccccc;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Hyperliquid Wallet Connection Test</h1>
+        
+        <div class="warning">
+            <strong>⚠️ Security Warning:</strong> This is for testing purposes only. Never use your mainnet private key in development/testing environments. Use testnet keys only!
+        </div>
+
+        <div class="info">
+            <strong>ℹ️ Info:</strong> This page allows you to connect to Hyperliquid with a private key for testing authenticated features like placing orders, checking balances, etc.
+        </div>
+
+        <!-- Connection Status -->
+        <div class="section">
+            <h3>📡 Connection Status</h3>
+            <div id="connectionStatus" class="status disconnected">Disconnected</div>
+            <div id="walletAddress"></div>
+        </div>
+
+        <!-- Wallet Connection -->
+        <div class="section">
+            <h3>🔐 Wallet Connection</h3>
+            <div class="input-group">
+                <label for="privateKey">Private Key (testnet only!):</label>
+                <input type="password" id="privateKey" placeholder="0x...">
+            </div>
+            <button onclick="connectWallet()">Connect Wallet</button>
+            <button onclick="disconnectWallet()">Disconnect</button>
+            <button onclick="generateTestKey()">Generate Test Key</button>
+        </div>
+
+        <!-- Quick Tests -->
+        <div class="section">
+            <h3>🧪 Quick Tests</h3>
+            <button onclick="testMarketData()">Test Market Data</button>
+            <button onclick="testAccountInfo()">Test Account Info</button>
+            <button onclick="testPositions()">Test Positions</button>
+            <button onclick="testOrders()">Test Orders</button>
+            <button onclick="runFullTest()">Run Full Test</button>
+        </div>
+
+        <!-- Account Information -->
+        <div class="section" id="accountSection" style="display: none;">
+            <h3>👤 Account Information</h3>
+            <div class="grid">
+                <div class="metric">
+                    <div class="metric-value" id="accountBalance">--</div>
+                    <div class="metric-label">Total Balance (USDC)</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="openPositions">--</div>
+                    <div class="metric-label">Open Positions</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="openOrders">--</div>
+                    <div class="metric-label">Open Orders</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="ethPrice">--</div>
+                    <div class="metric-label">ETH Price</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Results -->
+        <div class="section">
+            <h3>📊 Test Results</h3>
+            <pre id="testResults">Ready for testing...</pre>
+        </div>    </div>
+
+    <!-- Load the standalone hyperliquid service -->
+    <script src="./hyperliquid-standalone.js"></script>
+    <script>
+        let hyperliquidService = null;
+          // Initialize service reference
+        function initService() {
+            if (window.hyperliquidService) {
+                hyperliquidService = window.hyperliquidService;
+                log('✅ Hyperliquid service loaded successfully');
+                updateConnectionStatus();
+                return true;
+            } else {
+                log('⏳ Waiting for Hyperliquid service to load...');
+                return false;
+            }
+        }
+
+        // Log function
+        function log(message) {
+            const results = document.getElementById('testResults');
+            const timestamp = new Date().toLocaleTimeString();
+            results.textContent += `[${timestamp}] ${message}\n`;
+            results.scrollTop = results.scrollHeight;
+            console.log(message);
+        }
+
+        // Update connection status display
+        function updateConnectionStatus() {
+            if (!hyperliquidService) return;
+            
+            const statusEl = document.getElementById('connectionStatus');
+            const addressEl = document.getElementById('walletAddress');
+            const accountSection = document.getElementById('accountSection');
+            
+            const isConnected = hyperliquidService.isWalletConnected();
+            const address = hyperliquidService.getWalletAddress();
+            
+            if (isConnected && address) {
+                statusEl.textContent = 'Connected ✅';
+                statusEl.className = 'status connected';
+                addressEl.textContent = `Address: ${address}`;
+                accountSection.style.display = 'block';
+                updateAccountInfo();
+            } else {
+                statusEl.textContent = 'Disconnected ❌';
+                statusEl.className = 'status disconnected';
+                addressEl.textContent = '';
+                accountSection.style.display = 'none';
+            }
+        }
+
+        // Connect wallet
+        async function connectWallet() {
+            if (!hyperliquidService) {
+                log('❌ Service not available');
+                return;
+            }
+            
+            const privateKey = document.getElementById('privateKey').value.trim();
+            if (!privateKey) {
+                log('❌ Please enter a private key');
+                return;
+            }
+            
+            const statusEl = document.getElementById('connectionStatus');
+            statusEl.textContent = 'Connecting... ⏳';
+            statusEl.className = 'status connecting';
+            
+            try {
+                log('🔗 Attempting to connect wallet...');
+                const success = await hyperliquidService.connect(privateKey);
+                
+                if (success) {
+                    log('✅ Wallet connected successfully!');
+                    updateConnectionStatus();
+                } else {
+                    log('❌ Failed to connect wallet');
+                    updateConnectionStatus();
+                }
+            } catch (error) {
+                log(`❌ Connection error: ${error.message}`);
+                updateConnectionStatus();
+            }
+        }
+
+        // Disconnect wallet
+        function disconnectWallet() {
+            if (!hyperliquidService) return;
+            
+            hyperliquidService.disconnect();
+            log('🔌 Wallet disconnected');
+            updateConnectionStatus();
+        }
+
+        // Generate test private key
+        function generateTestKey() {
+            // Generate a random private key for testing
+            const randomBytes = new Uint8Array(32);
+            crypto.getRandomValues(randomBytes);
+            const privateKey = '0x' + Array.from(randomBytes).map(b => b.toString(16).padStart(2, '0')).join('');
+            
+            document.getElementById('privateKey').value = privateKey;
+            log('🔑 Generated test private key (DO NOT USE ON MAINNET!)');
+            log(`Key: ${privateKey.substring(0, 10)}...`);
+        }
+
+        // Test market data
+        async function testMarketData() {
+            if (!hyperliquidService) return;
+            
+            try {
+                log('📊 Testing market data...');
+                const data = await hyperliquidService.getMarketData('ETH');
+                log(`✅ ETH Price: $${data.markPx}`);
+                
+                document.getElementById('ethPrice').textContent = `$${parseFloat(data.markPx).toFixed(2)}`;
+            } catch (error) {
+                log(`❌ Market data test failed: ${error.message}`);
+            }
+        }
+
+        // Test account info
+        async function testAccountInfo() {
+            if (!hyperliquidService || !hyperliquidService.isWalletConnected()) {
+                log('❌ Wallet not connected');
+                return;
+            }
+            
+            try {
+                log('👤 Testing account info...');
+                const info = await hyperliquidService.getAccountInfo();
+                log(`✅ Account info retrieved: ${JSON.stringify(info, null, 2)}`);
+            } catch (error) {
+                log(`❌ Account info test failed: ${error.message}`);
+            }
+        }
+
+        // Test positions
+        async function testPositions() {
+            if (!hyperliquidService || !hyperliquidService.isWalletConnected()) {
+                log('❌ Wallet not connected');
+                return;
+            }
+            
+            try {
+                log('📈 Testing positions...');
+                const positions = await hyperliquidService.getPositions();
+                log(`✅ Positions: ${positions.length} found`);
+                
+                document.getElementById('openPositions').textContent = positions.length;
+            } catch (error) {
+                log(`❌ Positions test failed: ${error.message}`);
+            }
+        }
+
+        // Test orders
+        async function testOrders() {
+            if (!hyperliquidService || !hyperliquidService.isWalletConnected()) {
+                log('❌ Wallet not connected');
+                return;
+            }
+            
+            try {
+                log('📋 Testing orders...');
+                const orders = await hyperliquidService.getOpenOrders();
+                log(`✅ Open orders: ${orders.length} found`);
+                
+                document.getElementById('openOrders').textContent = orders.length;
+            } catch (error) {
+                log(`❌ Orders test failed: ${error.message}`);
+            }
+        }
+
+        // Update account info display
+        async function updateAccountInfo() {
+            if (!hyperliquidService || !hyperliquidService.isWalletConnected()) return;
+            
+            try {
+                // Get balance
+                const balance = await hyperliquidService.getAccountBalance();
+                document.getElementById('accountBalance').textContent = parseFloat(balance.totalAccountValue || '0').toFixed(2);
+                
+                // Get positions
+                const positions = await hyperliquidService.getPositions();
+                document.getElementById('openPositions').textContent = positions.length;
+                
+                // Get orders
+                const orders = await hyperliquidService.getOpenOrders();
+                document.getElementById('openOrders').textContent = orders.length;
+                
+            } catch (error) {
+                log(`⚠️ Error updating account info: ${error.message}`);
+            }
+        }
+
+        // Run full test
+        async function runFullTest() {
+            log('🧪 Starting full test suite...');
+            
+            await testMarketData();
+            
+            if (hyperliquidService && hyperliquidService.isWalletConnected()) {
+                await testAccountInfo();
+                await testPositions();
+                await testOrders();
+            }
+            
+            log('✅ Full test completed!');
+        }        // Initialize when page loads
+        window.addEventListener('load', () => {
+            log('🚀 Page loaded, initializing service...');
+            
+            // Try to initialize service with retry logic
+            function tryInit(attempts = 0) {
+                if (initService()) {
+                    log('🎉 Service ready for use!');
+                    return;
+                }
+                
+                if (attempts < 10) {
+                    setTimeout(() => tryInit(attempts + 1), 1000);
+                } else {
+                    log('❌ Failed to load service after multiple attempts');
+                }
+            }
+            
+            tryInit();
+        });
+
+        // Listen for service updates
+        setInterval(() => {
+            if (hyperliquidService) {
+                updateConnectionStatus();
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

@@ -1,12 +1,13 @@
 {
-  "name": "client",
+  "name": "hyperliquid-trader",
   "private": true,
   "version": "0.0.0",
+  "license": "MIT",
   "type": "module",
   "main": "dist-electron/main.js",
   "build": {
-    "appId": "com.app.app",
-    "productName": "HypeLiquid Sniper",
+    "appId": "com.harrisonaloo.hyperliquid-trader",
+    "productName": "Hyperliquid Trader",
     "files": [
       "dist-electron/**/*",
       "dist/**/*",
